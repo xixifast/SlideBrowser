@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SlideBrowser — the side browser for macOS</title>
+<meta name="description" content="A mini browser that slides in from the edge of your Mac screen with one keystroke. Your sites stay logged in, your focus stays put.">
+<meta property="og:title" content="SlideBrowser — the side browser for macOS">
+<meta property="og:description" content="Press ⌘E. Browse. Press Esc. Back to work.">
+<meta property="og:image" content="assets/panel-favourites.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top">
+      <img src="assets/icon.png" alt="" width="28" height="28">
+      <span>SlideBrowser</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#shortcuts">Shortcuts</a>
+      <a href="#download" class="nav-cta">Get the app</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- Hero: the product's one trick, shown literally — a panel sliding in from the right edge. -->
+  <section class="hero">
+    <div class="hero-copy">
+      <h1>A browser that lives at the edge of your screen.</h1>
+      <p class="lede">
+        Press <kbd>⌘</kbd><kbd>E</kbd> anywhere on your Mac and a mini browser slides in
+        from the side — ChatGPT, docs, mail, whatever you pinned. Press <kbd>Esc</kbd>
+        and you're back exactly where you were.
+      </p>
+      <div class="hero-actions">
+        <a class="button primary" href="#download">Get SlideBrowser</a>
+        <span class="hero-note">macOS 14+ · free while in beta</span>
+      </div>
+    </div>
+
+    <div class="hero-stage" aria-hidden="true">
+      <div class="desktop-mock">
+        <div class="mock-window">
+          <div class="mock-titlebar"><i></i><i></i><i></i></div>
+          <div class="mock-lines">
+            <span style="width:72%"></span><span style="width:56%"></span>
+            <span style="width:81%"></span><span style="width:38%"></span>
+            <span style="width:64%"></span><span style="width:47%"></span>
+          </div>
+        </div>
+        <img class="panel-shot" src="assets/panel-favourites.png"
+             alt="SlideBrowser panel showing the Favourites grid">
+        <div class="keycap-hint"><kbd>⌘E</kbd></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works: three verbs, no fluff. -->
+  <section class="steps">
+    <ol>
+      <li><b>Summon.</b> One global shortcut, from any app, on any display or Space — even over full-screen apps.</li>
+      <li><b>Do the thing.</b> Ask ChatGPT, check mail, look something up. Your sites stay logged in between visits.</li>
+      <li><b>Dismiss.</b> Esc slides the panel away and hands focus back to the app you came from.</li>
+    </ol>
+  </section>
+
+  <section id="features" class="features">
+    <h2>Small browser, real browser.</h2>
+    <p class="section-lede">Built on the same WebKit engine as Safari — not a toy webview.</p>
+    <div class="grid">
+      <article>
+        <h3>Sessions that survive</h3>
+        <p>Cookies and logins persist across launches. Sign in to ChatGPT once; it's still there next week.</p>
+      </article>
+      <article>
+        <h3>Keep-alive tabs</h3>
+        <p>Mark a site keep-alive and it never unloads. Everything else is managed by an LRU policy that restores history and scroll position when a page comes back.</p>
+      </article>
+      <article>
+        <h3>Popups that behave</h3>
+        <p>OAuth windows and <code>window.open</code> flows open inside the panel and close themselves when done. File upload and download work like a real browser.</p>
+      </article>
+      <article>
+        <h3>Made for many screens</h3>
+        <p>The panel appears on whichever display your pointer is on, joins every Space, and remembers the exact size you gave it.</p>
+      </article>
+      <article>
+        <h3>Chrome, hidden</h3>
+        <p>No tabs, no toolbars — just the page. Hover the top edge or press <kbd>⌘L</kbd> when you need the address bar.</p>
+      </article>
+      <article>
+        <h3>Private by design</h3>
+        <p>No analytics, no history collection, no accounts. Site data stays in macOS's own WebKit store, on your Mac. <a href="/privacy">Read the policy</a>.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="shortcuts" class="shortcuts">
+    <h2>Keyboard first.</h2>
+    <table>
+      <tr><td><kbd>⌘E</kbd></td><td>Show / hide the panel (customisable)</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>Hide and return focus to the previous app</td></tr>
+      <tr><td><kbd>⌘1</kbd>–<kbd>⌘9</kbd></td><td>Jump to a pinned site</td></tr>
+      <tr><td><kbd>⌘L</kbd></td><td>Address bar / search</td></tr>
+      <tr><td><kbd>⌘R</kbd> <kbd>⌘[</kbd> <kbd>⌘]</kbd></td><td>Reload, back, forward</td></tr>
+      <tr><td><kbd>⌘W</kbd></td><td>Close popup</td></tr>
+      <tr><td><kbd>⌘⇧G</kbd> <span class="dim">…anything</span></td><td>Per-site shortcuts — record your own key for any site</td></tr>
+    </table>
+  </section>
+
+  <section id="download" class="download">
+    <img src="assets/icon.png" alt="" width="88" height="88">
+    <h2>Get SlideBrowser</h2>
+    <p>SlideBrowser is in private beta and on its way to the Mac App Store. Follow this page for the release.</p>
+    <div class="hero-actions center">
+      <span class="button disabled" aria-disabled="true">Mac App Store — coming soon</span>
+    </div>
+    <p class="fine">Requires macOS 14 Sonoma or later · Apple silicon &amp; Intel</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <span>© 2026 SlideBrowser</span>
+    <nav>
+      <a href="/privacy">Privacy</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
