@@ -40,8 +40,8 @@
         and you're back exactly where you were.
       </p>
       <div class="hero-actions">
-        <a class="button primary" href="#download">Get SlideBrowser</a>
-        <span class="hero-note">macOS 14+ · free while in beta</span>
+        <a class="button primary" href="#download">Download for macOS</a>
+        <span class="hero-note">macOS 14+ · free &amp; open source</span>
       </div>
     </div>
 
@@ -118,11 +118,20 @@
   <section id="download" class="download">
     <img src="assets/icon.png" alt="" width="88" height="88">
     <h2>Get SlideBrowser</h2>
-    <p>SlideBrowser is in private beta and on its way to the Mac App Store. Follow this page for the release.</p>
+    <p>Free and open source. One 2.5&nbsp;MB download, no installer, no account.</p>
     <div class="hero-actions center">
-      <span class="button disabled" aria-disabled="true">Mac App Store — coming soon</span>
+      <a class="button primary" href="https://github.com/xixifast/SlideBrowser/releases/latest/download/SlideBrowser-1.0.0-universal.zip">Download for macOS</a>
+      <a class="button ghost" href="https://github.com/xixifast/SlideBrowser">View source on GitHub</a>
     </div>
-    <p class="fine">Requires macOS 14 Sonoma or later · Apple silicon &amp; Intel</p>
+    <p class="fine">Version 1.0.0 · macOS 14 Sonoma or later · universal (Apple silicon &amp; Intel)</p>
+
+    <div class="note">
+      <b>First launch takes one extra step.</b>
+      This build is not notarized yet, so macOS will refuse to open it the first time.
+      Go to <b>System Settings → Privacy &amp; Security</b>, find the blocked-app notice
+      and click <b>Open Anyway</b>. Once only. Prefer to avoid it? Build from source —
+      <code>swift test &amp;&amp; ./build.sh</code>.
+    </div>
   </section>
 
 </main>
