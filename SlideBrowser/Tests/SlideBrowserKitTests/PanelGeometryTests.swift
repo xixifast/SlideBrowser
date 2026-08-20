@@ -143,6 +143,32 @@ struct EmbeddedAuthProviderTests {
     }
 }
 
+@MainActor
+@Suite("SiteMonogram")
+struct SiteMonogramTests {
+    /// Regression guard: hashValue is seeded per process, so colours used to change on relaunch.
+    @Test func paletteIndexIsStableForTheSameHost() {
+        let a = SiteMonogram.paletteIndex(for: "mail.google.com", count: 8)
+        let b = SiteMonogram.paletteIndex(for: "mail.google.com", count: 8)
+        #expect(a == b)
+        #expect(SiteMonogram.paletteIndex(for: "mail.google.com", count: 8) == 0)
+    }
+
+    @Test func paletteIndexStaysInRange() {
+        for host in ["a", "notion.so", "web.whatsapp.com", "中文.example"] {
+            let index = SiteMonogram.paletteIndex(for: host, count: 8)
+            #expect(index >= 0 && index < 8)
+        }
+    }
+
+    @Test func differentHostsSpreadAcrossThePalette() {
+        let hosts = ["chatgpt.com", "claude.ai", "github.com", "mail.google.com",
+                     "app.slack.com", "youtube.com", "notion.so", "calendar.google.com"]
+        let used = Set(hosts.map { SiteMonogram.paletteIndex(for: $0, count: 8) })
+        #expect(used.count >= 4)
+    }
+}
+
 @Suite("Site")
 struct SiteTests {
     @Test func hostDropsTheWWWPrefix() {

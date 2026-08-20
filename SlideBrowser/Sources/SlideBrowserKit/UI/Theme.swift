@@ -41,8 +41,17 @@ struct SiteMonogram: View {
 
     private var color: Color {
         let palette: [Color] = [.blue, .purple, .pink, .orange, .green, .teal, .indigo, .red]
-        let index = abs(site.host.hashValue) % palette.count
-        return palette[index].opacity(0.85)
+        return palette[Self.paletteIndex(for: site.host, count: palette.count)].opacity(0.85)
+    }
+
+    /// Swift seeds `hashValue` per process, so using it here made a site's fallback icon
+    /// change colour on every launch. FNV-1a keeps it stable.
+    static func paletteIndex(for host: String, count: Int) -> Int {
+        var hash: UInt32 = 2_166_136_261
+        for byte in host.utf8 {
+            hash = (hash ^ UInt32(byte)) &* 16_777_619
+        }
+        return Int(hash % UInt32(count))
     }
 }
 
