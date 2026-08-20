@@ -18,6 +18,9 @@ final class WebSessionManager: ObservableObject {
     private let siteStore: SiteStore
     private let settings: SettingsStore
     private var cancellables: Set<AnyCancellable> = []
+    /// Site ids the store held on the previous change, so a deletion can be told apart from a
+    /// scratch session that was never in the store.
+    private var knownSiteIDs: Set<UUID> = []
 
     var activeSession: WebSession? {
         guard let activeSiteID else { return nil }
@@ -97,7 +100,6 @@ final class WebSessionManager: ObservableObject {
         }
         let scratch = Site(name: url.host ?? "Web", urlString: url.absoluteString)
         let session = session(for: scratch)
-        sessions[scratch.id] = session
         activeSiteID = scratch.id
         session.load(url)
         enforceMemoryPolicy()
@@ -133,9 +135,13 @@ final class WebSessionManager: ObservableObject {
             session.suspend()
             sessions.removeValue(forKey: id)
         }
-        if let activeSiteID, !validIDs.contains(activeSiteID), sessions[activeSiteID] == nil {
-            self.activeSiteID = nil
+        // A scratch session from the address bar is absent from the store too, so fall back home
+        // only for a site the store actually dropped.
+        if let activeSiteID, knownSiteIDs.contains(activeSiteID), !validIDs.contains(activeSiteID) {
+            sessions.removeValue(forKey: activeSiteID)?.suspend()
+            showHome()
         }
+        knownSiteIDs = validIDs
     }
 }
 

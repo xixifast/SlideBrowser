@@ -258,3 +258,47 @@ struct HotKeyComboTests {
         #expect(combo.displayString.hasPrefix("⌃⌥⇧⌘"))
     }
 }
+
+@MainActor
+@Suite("WebSessionManager pruning")
+struct WebSessionManagerPruningTests {
+    private func makeManager() -> (WebSessionManager, SiteStore) {
+        let token = UUID().uuidString
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("slidebrowser-tests-\(token)")
+            .appendingPathComponent("sites.json")
+        try? FileManager.default.createDirectory(
+            at: url.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        let store = SiteStore(fileURL: url)
+        let settings = SettingsStore(defaults: UserDefaults(suiteName: "slidebrowser-tests-\(token)")!)
+        return (WebSessionManager(siteStore: store, settings: settings), store)
+    }
+
+    /// Regression guard: the fallback used to require that the active session had already been
+    /// removed, which the prune loop makes impossible, so a deleted site stayed on screen.
+    @Test func deletingTheActiveSiteFallsBackHome() throws {
+        let (manager, store) = makeManager()
+        let site = try #require(store.orderedSites.first)
+        manager.activate(site: site, loadImmediately: false)
+        #expect(manager.activeSiteID == site.id)
+
+        store.remove(id: site.id)
+        #expect(manager.isShowingHome)
+        #expect(manager.sessions[site.id] == nil)
+    }
+
+    /// An address-bar session is not in the store either, so the fallback must not mistake it for
+    /// a deleted site and close the page being read.
+    @Test func editingTheSiteListKeepsAScratchSessionAlive() {
+        let (manager, store) = makeManager()
+        let scratch = Site(name: "Example", urlString: "https://example.com")
+        _ = manager.session(for: scratch)
+        manager.activate(site: scratch, loadImmediately: false)
+
+        store.add(Site(name: "Linear", urlString: "https://linear.app"))
+        #expect(manager.activeSiteID == scratch.id)
+        #expect(manager.sessions[scratch.id] != nil)
+    }
+}

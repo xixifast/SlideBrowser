@@ -141,6 +141,21 @@ struct EmbeddedAuthProviderTests {
         #expect(EmbeddedAuthProvider.providerName(for: URL(string: "https://github.com/login")!) == nil)
         #expect(EmbeddedAuthProvider.providerName(for: URL(string: "https://chatgpt.com/")!) == nil)
     }
+
+    /// Regression guard: the old predicate ignored the entry being tested, so a regional Google
+    /// host matched whichever entry the dictionary happened to yield first.
+    @Test func namesRegionalGoogleHostsGoogle() {
+        for host in ["accounts.google.co.jp", "accounts.google.de", "accounts.google.com.au"] {
+            #expect(EmbeddedAuthProvider.providerName(for: URL(string: "https://\(host)/signin")!) == "Google")
+        }
+    }
+
+    /// Regression guard: an unanchored suffix match read notlogin.live.com as login.live.com.
+    @Test func matchesSubdomainsOnlyOnALabelBoundary() {
+        #expect(EmbeddedAuthProvider.providerName(for: URL(string: "https://eu.login.live.com/")!) == "Microsoft")
+        #expect(EmbeddedAuthProvider.providerName(for: URL(string: "https://notlogin.live.com/")!) == nil)
+        #expect(EmbeddedAuthProvider.providerName(for: URL(string: "https://fakeappleid.apple.com/")!) == nil)
+    }
 }
 
 @MainActor

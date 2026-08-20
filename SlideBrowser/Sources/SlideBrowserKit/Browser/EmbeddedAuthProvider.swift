@@ -16,7 +16,9 @@ enum EmbeddedAuthProvider {
     static func providerName(for url: URL) -> String? {
         guard let host = url.host?.lowercased() else { return nil }
         if let exact = hosts[host] { return exact }
-        // Cover regional and tenant subdomains such as accounts.google.co.jp.
-        return hosts.first { host.hasSuffix($0.key) || host.hasPrefix("accounts.google.") }?.value
+        // Google signs in on regional domains too: accounts.google.co.jp, .de, and friends.
+        if host.hasPrefix("accounts.google.") { return hosts["accounts.google.com"] }
+        // Anchored on a label boundary, so notlogin.live.com is not read as login.live.com.
+        return hosts.first { host.hasSuffix(".\($0.key)") }?.value
     }
 }
