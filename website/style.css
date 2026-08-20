@@ -111,7 +111,6 @@ h1 {
   letter-spacing: -0.02em;
   font-weight: 800;
   text-wrap: balance;
-  max-width: 14ch;
 }
 
 .lede {
@@ -252,41 +251,6 @@ h1 {
   html { scroll-behavior: auto; }
 }
 
-/* ---------- steps ---------- */
-
-.steps { max-width: 1060px; margin: 48px auto 0; padding: 0 24px; }
-
-.steps ol {
-  list-style: none;
-  counter-reset: step;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-}
-
-.steps li {
-  counter-increment: step;
-  background: var(--card);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius);
-  padding: 20px;
-  color: var(--text-2);
-  font-size: 0.97rem;
-}
-.steps li b { color: var(--text); display: block; margin-bottom: 6px; font-size: 1.05rem; }
-.steps li::before {
-  content: counter(step);
-  display: inline-grid;
-  place-items: center;
-  width: 26px; height: 26px;
-  margin-bottom: 12px;
-  border-radius: 50%;
-  background: var(--text);
-  color: var(--bg);
-  font-weight: 700;
-  font-size: 0.85rem;
-}
-
 /* ---------- features ---------- */
 
 .features { max-width: 1060px; margin: 88px auto 0; padding: 0 24px; }
@@ -302,7 +266,7 @@ h2 {
 .features .grid {
   margin-top: 28px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 14px;
 }
 
@@ -385,7 +349,7 @@ footer {
   .hero { grid-template-columns: 1fr; padding-top: 48px; }
   .hero-stage { order: -1; }
   h1 { max-width: none; }
-  .steps ol, .features .grid { grid-template-columns: 1fr; }
+  .features .grid { grid-template-columns: 1fr; }
   .nav-links a:not(.nav-cta) { display: none; }
   .shortcuts td:first-child { white-space: normal; width: auto; }
   .shortcuts td { padding: 11px 14px; }
