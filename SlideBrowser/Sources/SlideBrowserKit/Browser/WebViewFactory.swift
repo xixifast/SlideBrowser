@@ -18,10 +18,13 @@ enum WebViewFactory {
         return major >= 26 ? "\(major).0" : "18.6"
     }()
 
+    /// The tail WebKit appends to its own stock prefix. Also the part login providers look for.
+    private static var safariSuffix: String { "Version/\(safariVersion) Safari/605.1.15" }
+
     /// The complete user agent the web views report, reused for favicon requests.
     static var browserUserAgent: String {
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 "
-            + "(KHTML, like Gecko) Version/\(safariVersion) Safari/605.1.15"
+            + "(KHTML, like Gecko) " + safariSuffix
     }
 
     static func makeConfiguration() -> WKWebViewConfiguration {
@@ -33,7 +36,7 @@ enum WebViewFactory {
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
         configuration.preferences.isElementFullscreenEnabled = true
         configuration.preferences.javaScriptCanOpenWindowsAutomatically = true
-        configuration.applicationNameForUserAgent = "Version/\(safariVersion) Safari/605.1.15"
+        configuration.applicationNameForUserAgent = safariSuffix
         return configuration
     }
 

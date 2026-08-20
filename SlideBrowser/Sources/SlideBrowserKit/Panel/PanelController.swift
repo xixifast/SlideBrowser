@@ -210,8 +210,10 @@ final class PanelController {
         guard screen.width > 0, screen.height > 0 else { return }
 
         settings.panelWidth = PanelGeometry.clampWidth(frame.width, screenWidth: screen.width)
-        settings.panelHeightRatio = min(max(frame.height / screen.height, 0.2), 1)
-        settings.panelTopInsetRatio = min(max((screen.maxY - frame.maxY) / screen.height, 0), 0.8)
+        settings.panelHeightRatio = PanelGeometry.clampHeightRatio(frame.height / screen.height)
+        settings.panelTopInsetRatio = PanelGeometry.clampTopInsetRatio(
+            (screen.maxY - frame.maxY) / screen.height
+        )
     }
 }
 

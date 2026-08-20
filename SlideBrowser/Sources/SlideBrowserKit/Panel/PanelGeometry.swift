@@ -33,8 +33,7 @@ struct PanelGeometry {
     }
 
     var width: CGFloat {
-        let maxWidth = max(Self.minWidth, screenFrame.width * Self.maxWidthRatio)
-        return min(max(requestedWidth, Self.minWidth), maxWidth)
+        Self.clampWidth(requestedWidth, screenWidth: screenFrame.width)
     }
 
     var height: CGFloat {
@@ -70,5 +69,15 @@ struct PanelGeometry {
     static func clampWidth(_ value: CGFloat, screenWidth: CGFloat) -> CGFloat {
         let maxWidth = max(minWidth, screenWidth * maxWidthRatio)
         return min(max(value, minWidth), maxWidth)
+    }
+
+    /// Persisting a resize and reading it back on the next launch must agree on these bounds,
+    /// otherwise the panel quietly changes size between runs.
+    static func clampHeightRatio(_ value: CGFloat) -> CGFloat {
+        min(max(value, 0.2), 1)
+    }
+
+    static func clampTopInsetRatio(_ value: CGFloat) -> CGFloat {
+        min(max(value, 0), 0.8)
     }
 }

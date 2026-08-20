@@ -29,7 +29,7 @@ final class SlidePanel: NSPanel {
         collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         titlebarAppearsTransparent = true
         titleVisibility = .hidden
-        minSize = CGSize(width: PanelGeometry.minWidth, height: 200)
+        minSize = CGSize(width: PanelGeometry.minWidth, height: PanelGeometry.minHeight)
     }
 
     override func cancelOperation(_ sender: Any?) {

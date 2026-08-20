@@ -74,7 +74,6 @@ final class AppEnvironment {
 
         sessionManager.restoreLastSite()
         registerToggleHotKey(settings.toggleHotKey)
-        refreshSiteHotKeys()
         siteStore.$sites
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in self?.refreshSiteHotKeys() }

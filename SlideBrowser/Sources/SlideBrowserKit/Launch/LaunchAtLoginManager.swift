@@ -37,10 +37,10 @@ final class LaunchAtLoginManager: ObservableObject {
             wasEnabled = enabled
         } catch {
             NSLog("SlideBrowser: launch at login change failed: \(error.localizedDescription)")
-            // Roll back so the UI never claims a state the system rejected.
+            // Roll back so the UI never claims a state the system rejected. Writing wasEnabled
+            // first makes the didSet guard short-circuit instead of recursing.
             wasEnabled = !enabled
             isEnabled = !enabled
-            wasEnabled = !enabled
         }
     }
 }

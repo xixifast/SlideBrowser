@@ -145,11 +145,6 @@ final class WebSession: NSObject, ObservableObject, Identifiable {
     func goForward() { webView?.goForward() }
     func stopLoading() { webView?.stopLoading() }
 
-    func goHome() {
-        guard let url = site.url else { return }
-        load(url)
-    }
-
     // MARK: - Observation
 
     private func observe(_ webView: WKWebView) {

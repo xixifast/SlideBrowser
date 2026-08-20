@@ -117,8 +117,12 @@ final class SettingsStore: ObservableObject {
 
         panelSide = PanelSide(rawValue: defaults.string(forKey: Key.panelSide) ?? "") ?? .right
         panelWidth = CGFloat(defaults.double(forKey: Key.panelWidth))
-        panelHeightRatio = min(max(CGFloat(defaults.double(forKey: Key.panelHeightRatio)), 0.2), 1)
-        panelTopInsetRatio = min(max(CGFloat(defaults.double(forKey: Key.panelTopInsetRatio)), 0), 0.8)
+        panelHeightRatio = PanelGeometry.clampHeightRatio(
+            CGFloat(defaults.double(forKey: Key.panelHeightRatio))
+        )
+        panelTopInsetRatio = PanelGeometry.clampTopInsetRatio(
+            CGFloat(defaults.double(forKey: Key.panelTopInsetRatio))
+        )
         autoHide = defaults.bool(forKey: Key.autoHide)
         alwaysOnTop = defaults.bool(forKey: Key.alwaysOnTop)
         isPinned = defaults.bool(forKey: Key.isPinned)
