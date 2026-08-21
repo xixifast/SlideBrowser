@@ -2,7 +2,7 @@
 
 **A mini browser that lives at the edge of your Mac screen.** Press <kbd>⌘E</kbd> anywhere — a panel slides in from the side with your pinned sites (ChatGPT, docs, mail…). Press <kbd>Esc</kbd> and you're back exactly where you were.
 
-**[Download 1.0.1](https://github.com/xixifast/SlideBrowser/releases/latest/download/SlideBrowser-1.0.1-universal.zip)** · **[Website](https://slidebrowser.pages.dev)** · macOS 14+ · universal · Swift + AppKit + SwiftUI + WKWebView, zero third-party dependencies
+**[Download](https://github.com/xixifast/SlideBrowser/releases/latest/download/SlideBrowser-universal.zip)** · **[Website](https://slidebrowser.pages.dev)** · macOS 14+ · universal · Swift + AppKit + SwiftUI + WKWebView, zero third-party dependencies
 
 <p align="center">
   <img src="website/assets/panel-favourites.png" width="380" alt="SlideBrowser panel with the Favourites grid">

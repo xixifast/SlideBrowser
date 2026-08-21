@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Stamp version from tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          plist=SlideBrowser/Resources/Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" "$plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${GITHUB_RUN_NUMBER}" "$plist"
+
+      - name: Test
+        working-directory: SlideBrowser
+        run: swift test
+
+      - name: Build universal
+        working-directory: SlideBrowser
+        run: ./build.sh --universal
+
+      - name: Package
+        working-directory: SlideBrowser
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent build/SlideBrowser.app SlideBrowser-universal.zip
+          shasum -a 256 SlideBrowser-universal.zip
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          asset=SlideBrowser/SlideBrowser-universal.zip
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "$asset" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "$asset" \
+              --title "SlideBrowser ${GITHUB_REF_NAME#v}" \
+              --generate-notes
+          fi

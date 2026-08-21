@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    paths: ["SlideBrowser/**", ".github/workflows/ci.yml"]
+  pull_request:
+    paths: ["SlideBrowser/**", ".github/workflows/ci.yml"]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain
+        run: swift --version
+      - name: Test
+        working-directory: SlideBrowser
+        run: swift test
