@@ -30,14 +30,18 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-BUILD_ARGS=(-c "$CONFIG")
-if [[ $UNIVERSAL -eq 1 ]]; then
-    BUILD_ARGS+=(--arch arm64 --arch x86_64)
-fi
+DEPLOYMENT_TARGET="14.0"   # keep in step with Package.swift platforms: .macOS(.v14)
 
-echo "==> swift build ${BUILD_ARGS[*]}"
-swift build "${BUILD_ARGS[@]}"
-BIN_PATH="$(swift build "${BUILD_ARGS[@]}" --show-bin-path)"
+# Compile one architecture in its own scratch dir and echo its bin path. The build's
+# own output is sent to stderr so only the bin path is captured.
+build_slice() {   # <arch> <scratch>
+    local arch="$1" scratch="$2"
+    local target="${arch}-apple-macos${DEPLOYMENT_TARGET}"
+    swift build -c "$CONFIG" --scratch-path "$scratch" \
+        -Xswiftc -target -Xswiftc "$target" 1>&2
+    swift build -c "$CONFIG" --scratch-path "$scratch" \
+        -Xswiftc -target -Xswiftc "$target" --show-bin-path
+}
 
 APP_DIR="$ROOT/build/SlideBrowser.app"
 CONTENTS="$APP_DIR/Contents"
@@ -45,7 +49,20 @@ CONTENTS="$APP_DIR/Contents"
 rm -rf "$APP_DIR"
 mkdir -p "$CONTENTS/MacOS" "$CONTENTS/Resources"
 
-cp "$BIN_PATH/SlideBrowser" "$CONTENTS/MacOS/SlideBrowser"
+if [[ $UNIVERSAL -eq 1 ]]; then
+    # `swift build --arch a --arch b` routes through the Xcode build system, which
+    # mis-handles .swiftLanguageMode(.v5) on some Xcode versions. Per-arch native
+    # builds + lipo stay on the plain toolchain and work anywhere.
+    echo "==> build universal (arm64 + x86_64)"
+    ARM_BIN="$(build_slice arm64 "$ROOT/.build/arm64")/SlideBrowser"
+    X86_BIN="$(build_slice x86_64 "$ROOT/.build/x86_64")/SlideBrowser"
+    lipo -create "$ARM_BIN" "$X86_BIN" -output "$CONTENTS/MacOS/SlideBrowser"
+else
+    echo "==> build $CONFIG"
+    swift build -c "$CONFIG"
+    cp "$(swift build -c "$CONFIG" --show-bin-path)/SlideBrowser" "$CONTENTS/MacOS/SlideBrowser"
+fi
+
 cp "$ROOT/Resources/Info.plist" "$CONTENTS/Info.plist"
 printf 'APPL????' > "$CONTENTS/PkgInfo"
 
