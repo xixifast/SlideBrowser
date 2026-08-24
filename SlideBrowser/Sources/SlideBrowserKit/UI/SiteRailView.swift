@@ -88,6 +88,22 @@ struct SiteRailView: View {
                         NSWorkspace.shared.open(url)
                     }
                 }
+                let plugins = PagePluginRegistry.availablePlugins(for: session)
+                Menu("Plugins") {
+                    if plugins.isEmpty {
+                        Button("No plugins available") {}
+                            .disabled(true)
+                    } else {
+                        ForEach(plugins) { plugin in
+                            Button {
+                                PagePluginRegistry.run(plugin.id, on: session)
+                            } label: {
+                                Label(plugin.title, systemImage: plugin.systemImageName)
+                            }
+                            .help("\(plugin.help). \(plugin.privacyNote)")
+                        }
+                    }
+                }
                 Divider()
             }
 

@@ -19,6 +19,7 @@ It's not a second Chrome — it's a web tool layer that appears and disappears i
 - **Sessions that survive** — cookies/logins persist via WebKit's default data store; suspended pages restore history and scroll position (`WKWebView.interactionState`)
 - **Keep-alive + LRU** — pin hot sites in memory, everything else is recycled under a budget you control
 - **Real browser behavior** — `target="_blank"`/OAuth popups inside the panel, file upload/download, JS dialogs, web-process crash recovery
+- **Built-in page plugins** — start with Translate Page; it sends the current URL to Google Translate only when you choose it
 - **Hidden chrome** — no tabs or toolbars; hover the top edge or hit ⌘L for the address bar
 - **Private by design** — no analytics, no history collection, hosts never written to persistent logs ([policy](https://slidebrowser.pages.dev/privacy))
 
@@ -32,7 +33,7 @@ The build is not notarized yet, so the first launch needs one manual approval: *
 
 ```bash
 cd SlideBrowser
-swift test          # 73 unit tests
+swift test          # 83 unit tests
 ./build.sh --debug  # assembles + ad-hoc signs build/SlideBrowser.app
 open build/SlideBrowser.app
 ```
@@ -46,6 +47,7 @@ Sources/SlideBrowserKit/     all behavior, unit-testable
   Panel/      NSPanel slide-in, state machine, geometry (ratio-based, multi-display)
   HotKeys/    Carbon RegisterEventHotKey (sandbox-safe, no Accessibility permission)
   Browser/    WebSession lifecycle, NavigationPolicy (pure function), popups, downloads
+  Plugins/    built-in page actions, starting with Translate Page
   Sites/      site store (JSON), favicon fetcher (direct, negative-cached)
   Settings/   UserDefaults-backed store + SwiftUI settings
 Sources/SlideBrowser/        thin executable bootstrap

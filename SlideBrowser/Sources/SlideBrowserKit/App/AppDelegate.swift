@@ -132,6 +132,21 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
             action: #selector(goForward),
             keyEquivalent: "]"
         ).target = self
+        let pluginsItem = NSMenuItem(title: "Plugins", action: nil, keyEquivalent: "")
+        let pluginsMenu = NSMenu(title: "Plugins")
+        for plugin in PagePluginRegistry.plugins {
+            let item = pluginsMenu.addItem(
+                withTitle: plugin.title,
+                action: #selector(runPagePlugin(_:)),
+                keyEquivalent: ""
+            )
+            item.target = self
+            item.representedObject = plugin.id
+            item.toolTip = plugin.privacyNote
+            item.image = NSImage(systemSymbolName: plugin.systemImageName, accessibilityDescription: plugin.title)
+        }
+        pluginsItem.submenu = pluginsMenu
+        browserMenu.addItem(pluginsItem)
         browserMenu.addItem(.separator())
         browserMenu.addItem(
             withTitle: "Favourites",
@@ -189,6 +204,14 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
         environment.sessionManager.activeSession?.goForward()
     }
 
+    @MainActor @objc private func runPagePlugin(_ sender: NSMenuItem) {
+        guard let pluginID = sender.representedObject as? String,
+              let session = environment.sessionManager.activeSession,
+              PagePluginRegistry.isAvailable(pluginID, for: session)
+        else { return }
+        PagePluginRegistry.run(pluginID, on: session)
+    }
+
     @MainActor @objc private func showHome() {
         environment.sessionManager.showHome()
     }
@@ -199,6 +222,14 @@ public final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @MainActor @objc private func closePopup() {
         environment.sessionManager.closePopup()
+    }
+}
+
+extension AppDelegate: NSMenuItemValidation {
+    public func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        guard let pluginID = menuItem.representedObject as? String else { return true }
+        guard let session = environment.sessionManager.activeSession else { return false }
+        return PagePluginRegistry.isAvailable(pluginID, for: session)
     }
 }
 
